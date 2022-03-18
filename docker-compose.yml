@@ -1,0 +1,19 @@
+services:
+  app:
+    image: big-health-tweet-app:latest
+    ports:
+      - 9888:9888
+    environment:
+      - TWITTER_TOKEN=${TWITTER_TOKEN}
+      - WEATHER_TOKEN=${WEATHER_TOKEN}
+    volumes:
+      - ~/output:/root/app/output
+    #entrypoint: sh -c 'python -u app/core.py'
+    #entrypoint: sh -c 'jupyter lab --ip=0.0.0.0 --port=9888 --NotebookApp.token='' --NotebookApp.password='' --allow-root --notebook-dir=/root/testing'
+    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
