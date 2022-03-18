@@ -8,6 +8,7 @@ services:
       - WEATHER_TOKEN=${WEATHER_TOKEN}
     volumes:
       - ~/output:/root/app/output
+    #entrypoint: sh -c 'tail -f /dev/null'
     #entrypoint: sh -c 'python -u app/core.py'
     #entrypoint: sh -c 'jupyter lab --ip=0.0.0.0 --port=9888 --NotebookApp.token='' --NotebookApp.password='' --allow-root --notebook-dir=/root/testing'
     restart: unless-stopped

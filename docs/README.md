@@ -9,7 +9,7 @@ WEATHER_TOKEN=<YOUR_WEATHER_API_TOKEN>
 2. Please make sure Docker (https://www.docker.com/) is installed and running on your local machine.  
 
 
-3. Please build the image:
+3. In the terminal, navigate to the root directory of the repo. All other commands should be run from this location. Now, please build the image:
 
 ```angular2html
 docker build -t kirks-bh-tweet-app:latest .
@@ -21,17 +21,16 @@ docker build -t kirks-bh-tweet-app:latest .
 docker-compose up
 ```
 
-5. The image will create a folder in your home directory called `output/` that will contain process output files.  
+5. The running container will create a folder in your home directory called `output/` that will contain process output files.  
 
 
 6. To end it all, hit `ctr+C` in the terminal or use `docker ps` to locate the container ID and use `docker stop <image ID>`.
 
-Hey, here are some useful docker commands:
+
+Hey, here are some other useful docker commands:
 
 ```
-docker build -t big-health-tweet-app:latest .
-docker build --no-cache -t big-health-tweet-app:latest .
-docker exec -it $(docker ps -q --filter ancestor=big-health-tweet-app:latest) /bin/bash
-docker stop $(docker ps -q --filter ancestor=big-health-tweet-app:latest)
-docker-compose up
+docker build --no-cache -t kirks-bh-tweet-app:latest .
+docker exec -it $(docker ps -q --filter ancestor=kirks-bh-tweet-app:latest) /bin/bash
+docker stop $(docker ps -q --filter ancestor=kirks-bh-tweet-app:latest)
 ```

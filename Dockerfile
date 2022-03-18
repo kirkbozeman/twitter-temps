@@ -17,5 +17,4 @@ RUN mkdir app && \
 ADD /app app
 ADD /testing testing
 
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
 CMD ["python", "-u", "app/core.py"]
