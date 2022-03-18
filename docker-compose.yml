@@ -1,8 +1,8 @@
 services:
   app:
-    image: big-health-tweet-app:latest
-    ports:
-      - 9888:9888
+    image: kirks-bh-tweet-app:latest
+    #ports:
+    #  - 9888:9888
     environment:
       - TWITTER_TOKEN=${TWITTER_TOKEN}
       - WEATHER_TOKEN=${WEATHER_TOKEN}
