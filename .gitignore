@@ -3,4 +3,4 @@
 .idea/
 .env
 .DS_Store
-testing/testing.ipynb
+tests/testing.ipynb

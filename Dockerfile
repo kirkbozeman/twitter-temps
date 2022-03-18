@@ -15,6 +15,6 @@ RUN mkdir app && \
     mkdir output && \
     mkdir testing
 ADD /app app
-ADD /testing testing
+ADD /tests testing
 
 CMD ["python", "-u", "app/core.py"]

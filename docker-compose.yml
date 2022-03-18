@@ -1,20 +1,21 @@
 services:
   app:
+    build:
+      context: .
     image: kirks-bh-tweet-app:latest
     #ports:
     #  - 9888:9888
     environment:
       - TWITTER_TOKEN=${TWITTER_TOKEN}
       - WEATHER_TOKEN=${WEATHER_TOKEN}
+      - ROLL_VAL=${ROLL_VAL}
     volumes:
       - ~/output:/root/app/output
-    #entrypoint: sh -c 'tail -f /dev/null'
-    #entrypoint: sh -c 'python -u app/core.py'
     #entrypoint: sh -c 'jupyter lab --ip=0.0.0.0 --port=9888 --NotebookApp.token='' --NotebookApp.password='' --allow-root --notebook-dir=/root/testing'
     restart: unless-stopped
     deploy:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 3
+        max_attempts: 1
         window: 120s
