@@ -51,7 +51,11 @@ def bbox_to_temp(bbox, token):
     loc = weather['location']
     logging.info(f"Weather API: {loc['name']}, {loc['region']}, {loc['country']}")
 
-    return weather.get('current').get('temp_f')
+    current = weather.get('current')
+    if current:
+        return current.get('temp_f')
+    else:
+        return None
 
 
 def get_twitter_geo_stream(bearer_token, n):
@@ -79,13 +83,15 @@ def get_twitter_geo_stream(bearer_token, n):
 
                         bbox = places[0]['geo']['bbox']
                         temp = bbox_to_temp(bbox, WEATHER_TOKEN)
-                        temps_deq.append(temp)
-                        rolling_avg = round(sum(temps_deq)/len(temps_deq), 2)
 
-                        with open(f"{output_root}/temps.csv", 'a') as file1, \
-                                open(f"{output_root}/rolling_avg.csv", 'a') as file2:
-                            file1.write(f'"{full_name}",{temp}\n')
-                            file2.write(f'"{full_name}",{rolling_avg}\n')
+                        if temp:
+                            temps_deq.append(temp)
+                            rolling_avg = round(sum(temps_deq)/len(temps_deq), 2)
+
+                            with open(f"{output_root}/temps.csv", 'a') as file1, \
+                                    open(f"{output_root}/rolling_avg.csv", 'a') as file2:
+                                file1.write(f'"{full_name}",{temp}\n')
+                                file2.write(f'"{full_name}",{rolling_avg}\n')
 
     return
 
