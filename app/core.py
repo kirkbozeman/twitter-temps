@@ -62,6 +62,7 @@ def get_twitter_geo_stream(bearer_token, n):
     """
     Runs Twitter sample stream (v2 API) to grab geo data when available (tweet ignored if not available),
         also grabs weather data when geo data found.
+    Ref docs: https://docs.python-requests.org/en/v1.2.3/user/advanced/
 
     :param bearer_token: Twitter bearer token
     :param n: n number of temps to keep rolling avg on
@@ -77,21 +78,20 @@ def get_twitter_geo_stream(bearer_token, n):
                 includes = json.loads(line).get('includes')
                 if includes:
                     places = includes.get('places')
-                    if places:
-                        full_name = places[0]['full_name']
-                        logging.info(f"Twitter API: {full_name}")
+                    full_name = places[0]['full_name']
+                    logging.info(f"Twitter API: {full_name}")
 
-                        bbox = places[0]['geo']['bbox']
-                        temp = bbox_to_temp(bbox, WEATHER_TOKEN)
+                    bbox = places[0]['geo']['bbox']
+                    temp = bbox_to_temp(bbox, WEATHER_TOKEN)
 
-                        if temp:
-                            temps_deq.append(temp)
-                            rolling_avg = round(sum(temps_deq)/len(temps_deq), 2)
+                    if temp:
+                        temps_deq.append(temp)
+                        rolling_avg = round(sum(temps_deq)/len(temps_deq), 2)
 
-                            with open(f"{output_root}/temps.csv", 'a') as file1, \
-                                    open(f"{output_root}/rolling_avg.csv", 'a') as file2:
-                                file1.write(f'"{full_name}",{temp}\n')
-                                file2.write(f'"{full_name}",{rolling_avg}\n')
+                        with open(f"{output_root}/temps.csv", 'a') as file1, \
+                                open(f"{output_root}/rolling_avg.csv", 'a') as file2:
+                            file1.write(f'"{full_name}",{temp}\n')
+                            file2.write(f'"{full_name}",{rolling_avg}\n')
 
     return
 
