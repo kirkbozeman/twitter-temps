@@ -12,6 +12,7 @@ services:
     volumes:
       - ~/output:/root/app/output
     #entrypoint: sh -c 'jupyter lab --ip=0.0.0.0 --port=9888 --NotebookApp.token='' --NotebookApp.password='' --allow-root --notebook-dir=/root/testing'
+    #entrypoint: python -m tests.unittests
     restart: unless-stopped
     deploy:
       restart_policy:

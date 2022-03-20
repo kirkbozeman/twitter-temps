@@ -20,20 +20,8 @@ WEATHER_TOKEN = os.getenv('WEATHER_TOKEN')
 RUN_STARTTIME = datetime.now()
 
 
-def bbox_to_lat_lon(bbox):
-    """Converts bbox to lat/lon.
-
-    :param bbox: a bbox (list) returned from Twitter API
-
-    :return centroid of bbox
-    """
-
-    polygon = box(*bbox)
-    return round(polygon.centroid.y, 4), round(polygon.centroid.x, 4)
-
-
 def bbox_to_temp(bbox, token):
-    """Uses bbox from Twitter place.fields to query weather at lat/lon.
+    """Uses bbox from Twitter place.fields to query Weather API at lat/lon.
 
     :param bbox: a bbox (list) returned from Twitter API
     :param token: Weather API token
@@ -41,8 +29,9 @@ def bbox_to_temp(bbox, token):
     :return temp at location (bbox centroid)
     """
 
-    y, x = bbox_to_lat_lon(bbox)
-    url = f"http://api.weatherapi.com/v1/current.json?key={token}&q={y},{x}"
+    polygon = box(*bbox)
+    lat, lon = round(polygon.centroid.y, 4), round(polygon.centroid.x, 4)
+    url = f"http://api.weatherapi.com/v1/current.json?key={token}&q={lat},{lon}"
 
     session = requests.Session()
     response = session.get(url)
@@ -58,7 +47,25 @@ def bbox_to_temp(bbox, token):
         return None
 
 
-def get_twitter_geo_stream(bearer_token, n):
+def get_place_and_temp_info(includes):
+    """
+    Get data from twitter json 'includes' key json, calc avg and write files
+
+    :param includes: Twitter 'includes' key json
+    :param temps_deq: temp deque
+    """
+
+    places = includes['places']
+    full_name = places[0]['full_name']
+    logging.info(f"Twitter API: {full_name}")
+
+    bbox = places[0]['geo']['bbox']
+    temp = bbox_to_temp(bbox, WEATHER_TOKEN)
+
+    return full_name, temp
+
+
+def run_twitter_geo_stream(bearer_token, n):
     """
     Runs Twitter sample stream (v2 API) to grab geo data when available (tweet ignored if not available),
         also grabs weather data when geo data found.
@@ -77,16 +84,11 @@ def get_twitter_geo_stream(bearer_token, n):
             if line:
                 includes = json.loads(line).get('includes')
                 if includes:
-                    places = includes.get('places')
-                    full_name = places[0]['full_name']
-                    logging.info(f"Twitter API: {full_name}")
-
-                    bbox = places[0]['geo']['bbox']
-                    temp = bbox_to_temp(bbox, WEATHER_TOKEN)
+                    full_name, temp = get_place_and_temp_info(includes)
 
                     if temp:
                         temps_deq.append(temp)
-                        rolling_avg = round(sum(temps_deq)/len(temps_deq), 2)
+                        rolling_avg = round(sum(temps_deq) / len(temps_deq), 2)
 
                         with open(f"{output_root}/temps.csv", 'a') as file1, \
                                 open(f"{output_root}/rolling_avg.csv", 'a') as file2:
@@ -104,7 +106,7 @@ if __name__ == "__main__":
             os.makedirs(output_root)
 
         roll_val = int(os.getenv('ROLL_VAL'))
-        get_twitter_geo_stream(TWITTER_TOKEN, roll_val)
+        run_twitter_geo_stream(TWITTER_TOKEN, roll_val)
 
     except ValueError as e:
         logging.exception("Is your ROLL_VAL an int?")

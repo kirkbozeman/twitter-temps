@@ -17,32 +17,33 @@ I have assumed perhaps a minimal amount to show familiarity and best practice, I
 
 ### Directions to run
 
-1) Please create a file called `.env` in the root directory of the repo. The file `.env.template` has been provided as an example. Here you will add the following environment variables that will be utilized by Docker compose:
+1) Please clone the repo to your local machine.
+
+
+2) Please create a file called `.env` in the root directory of the repo. The file `.env.template` has been provided as an example. Here you will add the following environment variables that will be utilized by Docker compose:
 ```angular2html
 TWITTER_TOKEN=<YOUR_TWITTER_API_TOKEN>
 WEATHER_TOKEN=<YOUR_WEATHER_API_TOKEN>
-ROLL_VAL=<N of temps to calc rolling avg>
+ROLL_VAL=<integer N of temps to calc rolling avg>
 ```
 
-2. Please make sure Docker (https://www.docker.com/) is installed and running on your local machine.  
+3) Please make sure [Docker](https://docs.docker.com/get-docker/) is installed and running on your local machine.  
 
 
-3. In the terminal, navigate to the root directory of the repo. All other commands should be run from this location. Now, please build the image:
+4) In the terminal, navigate to the root directory of the repo. All other commands should be run from this location. Now, please build the image:
 
 ```angular2html
 docker-compose build
 ```
-
-4. Now please run the image:
+5) Now please run the image:
 
 ```angular2html
 docker-compose up
 ```
+6) The running container will create a folder in your home directory called `output/` that will contain process output files. On Mac, this should be your username directory (of course).
 
-5. The running container will create a folder in your home directory called `output/` that will contain process output files. On Mac, this should be your username directory (of course).
 
-
-6. To end it all, hit `ctr+C` in the terminal or use `docker ps` to locate the container ID and use `docker stop <container ID>`.
+7) To end it all, hit `ctr+C` in the terminal or use `docker ps` to locate the container ID and use `docker stop <container ID>`.
 
 
 ### Production Deployment
@@ -52,7 +53,7 @@ docker-compose up
 A production deployment should follow modern CI/CD deployment standards.
 1. Local push to a build server. 
 2. Push to an image hub if build is "OK".
-3. Push to QA env for testing.
+3. Automated deployment to QA env for testing.
 4. Promotion to Prod env for final deployment upon approval.
 
 Mostly AWS options are mentioned in diagram above, though there are many similar ways to produce this setup. Note that app will need to be refactored to output to S3 if AWS is the cloud provider used.
