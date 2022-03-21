@@ -53,6 +53,8 @@ def get_place_and_temp_info(includes):
 
     :param includes: Twitter 'includes' key json
     :param temps_deq: temp deque
+
+    :return full place name, temp at location
     """
 
     places = includes['places']
