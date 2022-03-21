@@ -49,7 +49,7 @@ def bbox_to_temp(bbox, token):
 
 def get_place_and_temp_info(includes):
     """
-    Get data from twitter json 'includes' key json, calc avg and write files
+    Get data from twitter json 'includes' key json, use to query and return temp
 
     :param includes: Twitter 'includes' key json
     :param temps_deq: temp deque
